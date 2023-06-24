@@ -1,6 +1,6 @@
 import { PixabayAPI } from './photo-api';
 import Notiflix from 'notiflix';
-//import createGalleryCards from '../templates/photo-card.hbs';
+import createGalleryCards from '../templates/photo-card.hbs';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
@@ -23,8 +23,11 @@ const onSearchFormSubmit = async event => {
         elements: { searchQuery },
     } = event.currentTarget;
 
-    pixabayAPI.query = searchQuery.value;
-
+    pixabayAPI.query = searchQuery.value.trim();
+    if (!pixabayAPI.query) {
+        Notiflix.Notify.failure('Please enter a search query.');
+        return;
+    }
     try {
         const response = await pixabayAPI.fetchPhotos();
         const totalHits = response.data.totalHits;
@@ -56,8 +59,9 @@ const onSearchFormSubmit = async event => {
         gallery.refresh();
 
         foundTotalHits(totalHits);
-    } catch {
-        Notiflix.Notify.failure(err);
+    } catch (error) {
+        console.log(error);
+        Notiflix.Notify.failure(error);
     }
 };
 
