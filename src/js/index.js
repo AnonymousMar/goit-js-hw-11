@@ -1,4 +1,4 @@
-import { PixabayAPI } from './photo-api';
+import { PixabayAPI } from './photo-api.js';
 import Notiflix from 'notiflix';
 import createGalleryCards from '../templates/photo-card.hbs';
 import SimpleLightbox from 'simplelightbox';
@@ -62,7 +62,7 @@ const onSearchFormSubmit = async event => {
     }
 };
 
-// LOAD MORE IMAGES by Button
+
 const onLoadMoreBtnClick = async event => {
     pixabayAPI.page += 1;
 
@@ -75,13 +75,6 @@ const onLoadMoreBtnClick = async event => {
 
     try {
         pixabayAPI.fetchPhotos().then(response => {
-            // if (pixabayAPI.page * pixabayAPI.per_page > pixabayAPI.totalHits) {
-            //   loadMoreBtnEl.classList.add('is-hidden');
-            //   console.log('yes');
-            //   Notiflix.Notify.failure(
-            //     'We are sorry, but you have reached the end of search results.'
-            //   );
-            // }
 
             galleryEl.insertAdjacentHTML(
                 'beforeend',
