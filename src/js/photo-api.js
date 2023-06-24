@@ -1,27 +1,53 @@
-import axios from 'axios';
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
-export class PixabayAPI {
-    #BASE_URL = 'https://pixabay.com/api/';
-    #API_KEY = '37745610-94fa81a6ea5e93adfdf3ac469';
-
-    constructor() {
-        this.page = 1;
-        this.per_page = 40;
-        this.query = null;
-        this.totalHits = null;
+export default class Markup {
+    constructor({ selector }) {
+        this.items = null;
+        this.selector = selector;
+        this.lightbox = null;
     }
 
-    fetchPhotos() {
-        return axios.get(`${this.#BASE_URL}`, {
-            params: {
-                key: this.#API_KEY,
-                page: this.page,
-                per_page: this.per_page,
-                q: this.query,
-                image_type: 'photo',
-                orientation: 'horizontal',
-                safesearch: true,
-            },
-        });
+    render() {
+        const gallery = this.items
+            .map(({ largeImageURL, webformatURL, tags, likes, views, comments, downloads }) =>
+                `<a class="card-link" href="${largeImageURL}">
+      <div class="photo-card">
+      <div class="thumb">
+        <img class="photo" src="${webformatURL}" alt="${tags}"  loading="lazy" />
+      </div>
+        <div class="info">
+          <p class="info-item">
+            <b>Likes</b>
+            ${likes}
+          </p>
+          <p class="info-item">
+            <b>Views</b>
+            ${views}
+          </p>
+          <p class="info-item">
+            <b>Comments</b>
+            ${comments}
+          </p>
+          <p class="info-item">
+            <b>Downloads</b>
+            ${downloads}
+          </p>
+        </div>
+      </div>
+      </a>`
+            )
+            .join('');
+
+        this.selector.insertAdjacentHTML('beforeend', gallery);
+        this.initModal('.gallery a');
+    }
+
+    initModal(selector) {
+        this.lightbox = new SimpleLightbox(selector);
+    }
+
+    reset() {
+        this.selector.innerHTML = '';
     }
 }
