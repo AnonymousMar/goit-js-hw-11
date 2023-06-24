@@ -57,7 +57,7 @@ const onSearchFormSubmit = async event => {
  
         foundTotalHits(totalHits);
     } catch {
-        Notiflix.Notify.failure(err);
+        Notiflix.Notify.failure(error);
     }
 };
 
